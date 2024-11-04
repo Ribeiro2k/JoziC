@@ -1,0 +1,177 @@
+ <!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Josiane</title>
+    <style>
+        body {
+            background-image: linear-gradient(135deg, rgba(255, 105, 180, 0.4), rgba(255, 182, 193, 0.4)); /* Transição suave de cores */
+            background-size: cover;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        h1 {
+            color: pink;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 3em;
+            margin-top: 20px;
+            text-shadow: 2px 2px 2px black; /* Sombreado */
+        }
+
+        h2 {
+            margin: 10px 0;
+            opacity: 0; /* Oculta inicialmente */
+            transition: opacity 1s ease;
+            text-shadow: 2px 2px 2px black; /* Sombreado */
+        }
+
+        #contador {
+            background-color: rgba(255, 99, 71, 0.7); /* Cor de fundo suave */
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column; /* Alinha verticalmente */
+            justify-content: center; /* Centraliza o contador */
+            opacity: 0; /* Oculto inicialmente */
+            transition: opacity 1s ease;
+        }
+
+        #contador-superior {
+            display: flex;
+            justify-content: center; /* Centraliza o contador superior */
+        }
+
+        #contador-inferior {
+            display: flex;
+            justify-content: center; /* Centraliza o contador inferior */
+            opacity: 0; /* Oculto inicialmente */
+            transition: opacity 1s ease;
+        }
+
+        .time-unit {
+            margin: 0 10px; /* Espaçamento horizontal */
+            display: flex;
+            flex-direction: column; /* Para colocar a unidade embaixo */
+            align-items: center; /* Centraliza os elementos */
+            font-size: 1.5em; /* Tamanho da fonte maior */
+            text-shadow: 2px 2px 2px black; /* Sombreado */
+        }
+
+        .flip {
+            animation: flip 0.5s ease; /* Animação mais rápida */
+        }
+
+        @keyframes flip {
+            0% { transform: rotateX(0); }
+            50% { transform: rotateX(-90deg); }
+            100% { transform: rotateX(0); }
+        }
+
+        #dia_ficou {
+            opacity: 0; /* Oculta inicialmente */
+            transition: opacity 1s ease;
+            margin-top: 20px; /* Espaço entre o contador e a frase */
+            font-size: 1.2em; /* Tamanho da fonte da frase */
+            text-shadow: 2px 2px 2px black; /* Sombreado */
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="cabeçudinha">Cabeçudinha</h1>
+    <h2 id="saudacao">Oi, Josi… tudo bem?</h2>
+    <h2 id="mensagem">Eu fiz isso aqui como uma boba demonstração de carinho</h2>
+    <h2 id="gosto" style="opacity: 0;">Acho que tô gostando de você desde...</h2>
+    
+    <div id="contador">
+        <div id="contador-superior">
+            <div class="time-unit" id="meses">0M</div>
+            <div class="time-unit" id="semanas">0S</div>
+            <div class="time-unit" id="dias">0D</div>
+        </div>
+        <div id="contador-inferior">
+            <div class="time-unit" id="horas">0H</div>
+            <div class="time-unit" id="minutos">0m</div>
+            <div class="time-unit" id="segundos">0s</div>
+        </div>
+    </div>
+    
+    <div id="dia_ficou">...o dia que a gente ficou</div>
+
+    <script>
+        const dataInicial = new Date('2024-09-26T00:00:00');
+
+        const updateCounter = () => {
+            const now = new Date();
+            const diff = now - dataInicial;
+
+            const months = Math.floor(diff / (1000 * 60 * 60 * 24 * 30));
+            const weeks = Math.floor((diff % (1000 * 60 * 60 * 24 * 30)) / (1000 * 60 * 60 * 24 * 7));
+            const days = Math.floor((diff % (1000 * 60 * 60 * 24 * 7)) / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            // Atualiza cada elemento do contador com animação independente
+            updateElement("meses", `${months}M`); // Atualiza meses
+            updateElement("semanas", `${weeks}S`); // Atualiza semanas
+            updateElement("dias", `${days}D`); // Atualiza dias
+            updateElement("horas", `${hours}H`); // Atualiza horas
+            updateElement("minutos", `${minutes}m`); // Atualiza minutos
+            updateElement("segundos", `${seconds}s`); // Atualiza segundos
+        };
+
+        const updateElement = (id, value) => {
+            const element = document.getElementById(id);
+            if (element.innerText !== value) { // Verifica se o valor mudou
+                element.innerText = value;
+                element.classList.add("flip"); // Animação ao atualizar
+                setTimeout(() => {
+                    element.classList.remove("flip");
+                }, 500);
+            }
+        };
+
+        const revealContent = () => {
+            const saudacao = document.getElementById("saudacao");
+            const mensagem = document.getElementById("mensagem");
+            const gosto = document.getElementById("gosto");
+            const contador = document.getElementById("contador");
+            const contadorInferior = document.getElementById("contador-inferior");
+            const diaFicou = document.getElementById("dia_ficou");
+
+            saudacao.style.opacity = 1; // Exibe a saudação
+            mensagem.style.opacity = 1; // Exibe a mensagem
+            setTimeout(() => {
+                saudacao.style.opacity = 0; // Oculta a saudação
+                mensagem.style.opacity = 0; // Oculta a mensagem
+                gosto.style.opacity = 1; // Exibe a nova mensagem
+                setTimeout(() => {
+                    contador.style.opacity = 1; // Torna o contador visível
+                    contadorInferior.style.opacity = 1; // Torna o contador inferior visível
+                    setTimeout(() => {
+                        diaFicou.style.opacity = 1; // Exibe a mensagem abaixo do contador
+                    }, 2000); // Atraso para a mensagem abaixo do contador
+                }, 2000); // Duração da nova mensagem
+            }, 3000); // Duração da saudação
+        };
+
+        setTimeout(() => {
+            revealContent(); // Inicia a revelação das mensagens
+        }, 4000); // Atraso antes de iniciar a revelação
+
+        setInterval(updateCounter, 1000); // Atualiza o contador a cada segundo
+    </script>
+</body>
+</html>
